@@ -1,6 +1,5 @@
 # Tersano Coding Challenge
-</br>
-<h3>Overview<h3>
+<h2>Overview</h2>
 <p>
 This take-home project is designed to assess your proficiency with full-stack development using React, TypeScript, and Express. You will create a simple application that handles user authentication and product management.
 </p>
