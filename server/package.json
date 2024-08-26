@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "backend of coding challenge ",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dav-Sandhu/Product-Management-Interface-with-Authentication.git"
+  },
+  "author": "Davanjit Sandhu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dav-Sandhu/Product-Management-Interface-with-Authentication/issues"
+  },
+  "homepage": "https://github.com/Dav-Sandhu/Product-Management-Interface-with-Authentication#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
