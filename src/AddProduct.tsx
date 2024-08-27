@@ -48,6 +48,9 @@ export default function AddProduct(){
                 e.preventDefault()
                 const output = await addProduct(state.name, state.price, state.desc)
                 if (output.flag == "error"){ alert("oops, something went wrong! please try again.") }
+                else{
+                    navigate('/products')
+                }
             }}>
                 <div>
                     <label htmlFor="name">Name: </label>

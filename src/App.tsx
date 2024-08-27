@@ -2,17 +2,50 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import Home from './Home'
 import Products from './Products'
 import AddProduct from './AddProduct'
+import { authentication } from './Database'
+import { useEffect, useState, ComponentType, FC } from 'react'
+import UserProvider, { useUserInfo } from './UserProvider'
+
+type AuthProps = { component: ComponentType }
+
+const Auth: FC<AuthProps> = ({ component: Component }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+  const user = useUserInfo()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const output = await authentication()
+
+      if (output.flag != "error"){
+        user?.setUserInfo({ 
+          firstName: output.firstName, 
+          lastName: output.lastName, 
+          password: output.password, 
+          userName: output.userName 
+        })
+
+        !isLoggedIn ? setIsLoggedIn(true) : null
+      }
+    }
+
+    checkAuth()
+  }, [])
+
+  return isLoggedIn ? <Component /> : <Home />
+}
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/products" element={<Products />}/>
-        <Route path="/add-product" element={<AddProduct />}/>
-        <Route path="*" element={<Home />}/>
-      </Routes>
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/products" element={<Auth component={Products} />}/>
+          <Route path="/add-product" element={<Auth component={AddProduct} />}/>
+          <Route path="*" element={<Home />}/>
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   )
 }
 

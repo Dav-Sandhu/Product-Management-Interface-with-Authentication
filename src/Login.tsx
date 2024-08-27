@@ -1,6 +1,7 @@
 import "./Login.scss"
 import { useReducer } from "react"
 import { useNavigate } from "react-router-dom"
+import { authLogin } from "./Database"
 
 interface State {
     userName: string;
@@ -39,7 +40,13 @@ export default function Login(){
             <h1>Login</h1>
             <form onSubmit={(e) => {
                 e.preventDefault()
-                navigate('/products')
+
+                const checkLogin = async() => {
+                    const isLoggedIn = await authLogin(state.userName, state.password)
+                    if(isLoggedIn){ navigate('/products') }
+                }
+
+                checkLogin()
             }}>
                 <div>
                     <label htmlFor="username">Username: </label>

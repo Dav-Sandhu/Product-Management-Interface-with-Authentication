@@ -3,9 +3,25 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const express = require('express')
 const cors = require('cors')
-const Product = require('./schema')
+const { Product, User } = require('./schema')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const app = express()
+
+function authenticateToken(req, res, next) {
+  const token = req.headers.authorization
+
+  if (token == null) return res.json({ flag: "error", error: 'token is NULL' })
+  
+  jwt.verify(token, process.env.JWT_KEY, (err, output) => {
+    if (err) return res.json({ flag: "error", error: 'token authentication failed.' })
+
+    req.output = output
+
+    next()
+  })
+}
 
 const port = process.env.PORT ?? 3000
 const dbURI = "mongodb+srv://" + process.env.USER + ":" + process.env.PASSWORD + 
@@ -23,12 +39,50 @@ const getProducts = async () => {
   }
 }
 
-app.get('/', async (req, res) => {
+app.get('/', authenticateToken, async (req, res) => {
   const output = await getProducts()
-  res.send({ ...output })
+  return res.json({ ...output })
 })
 
-app.post('/add', async (req, res) => {
+app.get('/checktoken', authenticateToken, (req, res) => {
+  return res.json({ output: req.output.output, flag: "success" })
+})
+
+app.post('/login', async (req, res) => {
+
+  try{
+    const userName = req.body.userName
+    const password = req.body.password
+  
+    const user = await User.findOne({ userName })
+
+    if (!user) {
+      return res.json({ flag: "error", output: "Username not found!" })
+    }
+
+    const isMatch = bcrypt.compare(password, user.password)
+
+    if (isMatch){
+
+      const output = { 
+        firstName: user.firstName, 
+        lastName: user.lastName,
+        password: user.password,
+        userName: user.userName 
+      }
+
+      const token = jwt.sign({ output }, process.env.JWT_KEY, { expiresIn: '24h' })
+      return res.json({ flag: "success", token }) 
+    }
+
+    return res.json({ flag: "error", output: "Wrong password entered!" })
+  
+  }catch(e){
+    return res.json({ flag: "error", output: e })
+  }
+})
+
+app.post('/add', authenticateToken, async (req, res) => {
   const inputProduct = new Product({
     name: req.body.name, 
     price: parseFloat(req.body.price),
@@ -38,19 +92,19 @@ app.post('/add', async (req, res) => {
   try{
     await inputProduct.save()
     const output = await getProducts()
-    res.send({ ...output })
+    return res.json({ ...output })
   }catch(e){
-    res.send({ flag: "error", output: e })
+    return res.json({ flag: "error", output: e })
   }
 })
 
-app.post('/remove', async (req, res) => {
+app.post('/remove', authenticateToken, async (req, res) => {
   try{
     await Product.deleteOne({ _id: req.body._id })
     const output = await getProducts()
-    res.send({ ...output })
+    return res.json({ ...output })
   }catch(e){
-    res.send({ flag: "error", output: e })
+    return res.json({ flag: "error", output: e })
   }
 })
 

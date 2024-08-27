@@ -5,7 +5,16 @@ const productSchema = new Schema({
     name: String,
     price: Number,
     desc: String
-}, { collection: process.env.COLLECTION })
+}, { collection: "Products"})
+
+const userSchema = new Schema({
+    firstName: String,
+    lastName: String,
+    password: String,
+    userName: String
+}, { collection: "Users" })
 
 const Product = mongoose.model('Product', productSchema)
-module.exports = Product
+const User = mongoose.model('User', userSchema)
+
+module.exports = { User, Product }
