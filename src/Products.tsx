@@ -1,6 +1,7 @@
 import "./Products.scss"
 import { useState, useEffect } from  'react'
 import { getProducts, removeProduct } from "./Database"
+import { useNavigate } from "react-router-dom"
 
 type Product = {
     _id: string,
@@ -18,6 +19,8 @@ export default function Products(){
         setProductsList(output)
     }
 
+    const navigate = useNavigate()
+
     useEffect(() => {
         updateProducts()
     }, [])
@@ -32,15 +35,19 @@ export default function Products(){
                             <div className="product" key={index}>
                                 <h2>{p.name}</h2>
                                 <p>Price: ${p.price.toFixed(2)}</p>
-                                <p>{p.desc}</p>
-                                <button onClick={async () => {
-                                    const output = await removeProduct(p._id)
-                                    setProductsList(output)
-                                }}>Delete</button>
+                                <p className="desc">{p.desc}</p>
+                                <button 
+                                    className="delete-button" 
+                                    onClick={async () => {
+                                        const output = await removeProduct(p._id)
+                                        setProductsList(output)
+                                    }
+                                }>x</button>
                             </div>
                         )
                     })
                 }
+                <button className="add-button" onClick={() => navigate('/add-product')}>+</button>
             </div>
         </div>
     )

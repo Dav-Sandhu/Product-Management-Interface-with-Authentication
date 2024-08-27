@@ -46,7 +46,6 @@ app.post('/add', async (req, res) => {
 
 app.post('/remove', async (req, res) => {
   try{
-    console.log(req.body._id)
     await Product.deleteOne({ _id: req.body._id })
     const output = await getProducts()
     res.send({ ...output })
