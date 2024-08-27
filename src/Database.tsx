@@ -20,6 +20,26 @@ export const authLogin = async(userName: string, password: string): Promise<bool
     return true
 }
 
+export const authRegister = async(userName: string, password: string, firstName: string, lastName: string): Promise<boolean> => {
+    const response = await fetch(URL + 'register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userName, password, firstName, lastName })
+    })
+    const output = await response.json()
+
+    if (output.flag == "error"){ 
+        alert(output.output)
+        return false
+    }
+
+    sessionStorage.setItem('token', output.token)
+
+    return true
+}
+
 export const authentication = async() => {
     
     const token = sessionStorage.getItem('token')

@@ -48,6 +48,32 @@ app.get('/checktoken', authenticateToken, (req, res) => {
   return res.json({ output: req.output.output, flag: "success" })
 })
 
+app.post('/register', async (req, res) => {
+  try{
+    const userName = req.body.userName
+    const password = req.body.password
+    const firstName = req.body.firstName
+    const lastName = req.body.lastName
+
+    const output = { userName, firstName, lastName, password }
+
+    const check = await User.findOne({ userName })
+
+    if (!check){
+      const inputUser = new User({ ...output })
+      await inputUser.save()
+
+      const token = jwt.sign({ output }, process.env.JWT_KEY, { expiresIn: '24h' })
+      return res.json({ flag: "success", token }) 
+    }
+
+    return res.json({ flag: "error", output: "User already exists" })
+
+  }catch(e){
+    return res.json({ flag: "error", output: e })
+  }
+})
+
 app.post('/login', async (req, res) => {
 
   try{

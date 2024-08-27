@@ -1,6 +1,7 @@
 import "./Register.scss"
 import { useReducer } from "react"
 import { useNavigate } from "react-router-dom"
+import { authRegister } from "./Database"
 
 interface State {
     firstName: string;
@@ -53,7 +54,15 @@ export default function Register(){
 
             <form onSubmit={(e) => {
                 e.preventDefault()
-                navigate('/products')
+
+                if (state.password == state.reenter){
+                    const checkRegister = async() => {
+                        const registerSuccess = await authRegister(state.userName, state.password, state.firstName, state.lastName)
+                        if(registerSuccess){ navigate('/products') }
+                    }
+    
+                    checkRegister()
+                }else{alert("passwords don't match")}
             }}>
 
                 <div>
