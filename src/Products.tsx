@@ -1,64 +1,25 @@
 import "./Products.scss"
 import { useState, useEffect } from  'react'
+import { getProducts, removeProduct } from "./Database"
 
 type Product = {
-    name: String,
-    price: Number,
-    desc: String
+    _id: string,
+    name: string,
+    price: number,
+    desc: string
 }
 
 export default function Products(){
     
     const [productsList, setProductsList] = useState<Product[]>([])
 
+    const updateProducts = async() => {
+        const output = await getProducts()
+        setProductsList(output)
+    }
+
     useEffect(() => {
-        setProductsList([
-            {
-                name: "Watch", 
-                price: 20.55,
-                desc: "it's a watch"
-            },
-            {
-                name: "Camera", 
-                price: 53.42,
-                desc: "it's a camera"
-            },
-            {
-                name: "Watch", 
-                price: 20.55,
-                desc: "it's a watch"
-            },
-            {
-                name: "Watch", 
-                price: 20.55,
-                desc: "it's a watch"
-            },
-            {
-                name: "Watch", 
-                price: 20.55,
-                desc: "it's a watch"
-            },
-            {
-                name: "Watch", 
-                price: 20.55,
-                desc: "it's a watch"
-            },
-            {
-                name: "Watch", 
-                price: 20.55,
-                desc: "it's a watch"
-            },
-            {
-                name: "Watch", 
-                price: 20.55,
-                desc: "it's a watch"
-            },
-            {
-                name: "Watch", 
-                price: 20.55,
-                desc: "it's a watch"
-            },
-        ])
+        updateProducts()
     }, [])
 
     return(
@@ -72,6 +33,10 @@ export default function Products(){
                                 <h2>{p.name}</h2>
                                 <p>Price: ${p.price.toFixed(2)}</p>
                                 <p>{p.desc}</p>
+                                <button onClick={async () => {
+                                    const output = await removeProduct(p._id)
+                                    setProductsList(output)
+                                }}>Delete</button>
                             </div>
                         )
                     })

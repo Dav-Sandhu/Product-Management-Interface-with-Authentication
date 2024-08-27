@@ -1,18 +1,22 @@
-.home{
+body{
+  font-family: Tahoma, sans-serif;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: top;
-  align-items: center;
-  height: 100vh;
+  .home{
 
-  a{
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-      
-    &:hover{
-      color: skyblue;
-    }
-  }  
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    height: 100vh;
+  
+    a{
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+        
+      &:hover{
+        color: skyblue;
+      }
+    }  
+  }
 }
