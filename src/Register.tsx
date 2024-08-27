@@ -1,5 +1,6 @@
 import "./Register.scss"
 import { useReducer } from "react"
+import { useNavigate } from "react-router-dom"
 
 interface State {
     firstName: string;
@@ -43,6 +44,8 @@ export default function Register(){
 
     const [state, dispatch] = useReducer(reducer, initArgs)
 
+    const navigate = useNavigate()
+
     return(
         <div className="register">
 
@@ -50,6 +53,7 @@ export default function Register(){
 
             <form onSubmit={(e) => {
                 e.preventDefault()
+                navigate('/products')
             }}>
 
                 <div>

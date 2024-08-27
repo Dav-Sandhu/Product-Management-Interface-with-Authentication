@@ -1,5 +1,6 @@
 import "./Login.scss"
-import { useReducer, useState } from "react"
+import { useReducer } from "react"
+import { useNavigate } from "react-router-dom"
 
 interface State {
     userName: string;
@@ -30,13 +31,15 @@ const reducer = (state: State, payload: Payload): State => {
 export default function Login(){
     
     const [state, dispatch] = useReducer(reducer, initArgs)
-    const [page, setPage] = useState("login")
+
+    const navigate = useNavigate()
     
     return(
         <div className="login">
             <h1>Login</h1>
             <form onSubmit={(e) => {
                 e.preventDefault()
+                navigate('/products')
             }}>
                 <div>
                     <label htmlFor="username">Username: </label>
