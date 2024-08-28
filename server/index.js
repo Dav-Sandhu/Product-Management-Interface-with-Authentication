@@ -5,7 +5,6 @@ const express = require('express')
 const cors = require('cors')
 const { Product, User } = require('./schema')
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
 
 const app = express()
 
@@ -86,9 +85,7 @@ app.post('/login', async (req, res) => {
       return res.json({ flag: "error", output: "Username not found!" })
     }
 
-    const isMatch = bcrypt.compare(password, user.password)
-
-    if (isMatch){
+    if (password === user.password){
 
       const output = { 
         firstName: user.firstName, 
